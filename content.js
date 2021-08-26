@@ -7,5 +7,17 @@ if (document.readyState === 'loading') {
 function afterDOMLoaded() {
   var url = document.URL;
   var ep = url.substring(url.indexOf('ep-'), url.length);
-  alert(ep);
+  var epInfo = ep.split("-");
+
+  var section = document.getElementById('info');
+  var div = section.children[1];
+  var title = div.children[1].textContent;
+  var jtitle = div.children[1].getAttribute("data-jtitle");
+  alert(jtitle);
+
+  var jsonObj = {
+    "title": title,
+    "jtitle": jtitle,
+    "ep": epInfo[1]
+  };
 }
