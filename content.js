@@ -15,9 +15,9 @@ function afterDOMLoaded() {
   var jtitle = div.children[1].getAttribute("data-jtitle");
   alert(jtitle);
 
-  var jsonObj = {
-    "title": title,
-    "jtitle": jtitle,
-    "ep": epInfo[1]
-  };
+  chrome.runtime.sendMessage({"title": title, "jtitle": jtitle, "ep": epInfo[1]},
+    function(response) {
+      alert(response)
+  });
+
 }
