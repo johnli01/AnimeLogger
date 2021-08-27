@@ -8,5 +8,13 @@
       "js": ["content.js"],
       "run_at": "document_end"
     }
+  ],
+  "background": {
+    "scripts": ["jquery-3.4.1.js", "background.js"],
+    "persistent": false
+  },
+  "permissions": [
+    "http://localhost/*",
+    "storage"
   ]
 }
