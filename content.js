@@ -17,7 +17,7 @@ function afterDOMLoaded() {
 
   chrome.runtime.sendMessage({"title": title, "jtitle": jtitle, "ep": epInfo[1]},
     function(response) {
-      alert(response)
+      console.log(response);
   });
 
 }

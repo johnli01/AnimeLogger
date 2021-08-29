@@ -1,4 +1,5 @@
 from flask import Flask, request
+import requests
 
 app = Flask(__name__)
 
@@ -10,13 +11,22 @@ def retrieveData():
       print("RUNNING")
       if not request.form['title'] or not request.form['jtitle'] or not request.form['ep']:
         print('Enter all fields properly')
-        print('RUNNING 2.0')
       else:
         print(request.form['title'])
+        title = request.form['title']
+        jtitle = request.form['jtitle']
+        ep = request.form['ep']
+
         print(request.form['jtitle'])
         print(request.form['ep'])
         print('RUNNING 3.0')
+        updateMAL(title, jtitle, ep)
+    return 'OK'
+
+def updateMAL(title, jtitle, ep):
+  r = requests.get('https://api.myanimelist.net/v2/anime/suggestions?limit=4')
+  print(r.status_code)
 
 
 if __name__ == '__main__':
-  app.run(debug=True)
+  app.run()
