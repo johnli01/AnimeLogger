@@ -1,3 +1,4 @@
+// Waits for website to complete load before continuing
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', afterDOMLoaded());
 } else {
