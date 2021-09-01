@@ -13,3 +13,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   })
   sendResponse({ message: "Background received message"});
 })
+
+chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
+  chrome.tabs.executeScript(null,{file:"/scripts/content.js"});
+});

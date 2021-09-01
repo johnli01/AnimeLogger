@@ -15,6 +15,7 @@
   },
   "permissions": [
     "http://localhost/*",
-    "storage"
+    "tabs",
+    "webNavigation"
   ]
 }
