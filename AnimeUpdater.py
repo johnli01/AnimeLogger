@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask.globals import current_app
 import requests
 
 # MAL Access key (necessary to make changes and retrieve data on user's MAL list)
@@ -22,7 +23,7 @@ def retrieveData():
         ep = request.form['ep']
 
         # Uses sent data from Chrome Extension to update user's anime entry on MAL
-        updateMAL(title, jtitle, ep)
+        updateMAL(title, jtitle, int(ep))
     return 'OK'
 
 
@@ -30,11 +31,19 @@ def retrieveData():
 def updateMAL(title, jtitle, ep):
   print(title + " | " + jtitle)
   # Searches for the ID of the anime user is currently watching
-  id = findAnimeID(title, jtitle)
+  id, status, mal_ep = findAnimeID(title, jtitle)
   if id == None:
     print(title + " | " + jtitle + " : CANNOT BE FOUND IN USERS MAL LIST" )
+  elif status == 'watching' and ep > mal_ep:
+    update = {
+      'num_watched_episodes': ep,
+      'score': 3
+    }
+    url = 'https://api.myanimelist.net/v2/anime/' + str(id) + '/my_list_status'
+    r = requests.put(url, headers=key, data=update)
+    print("Finished Updating MAL")
   else:
-    print("Works")
+    print("User is rewatching old ep")
 
 
 # Searches the users current anime list on MAL and returns the specific anime id value,
@@ -46,8 +55,7 @@ def findAnimeID(title, jtitle):
   for anime in r:
     name = anime['node']['title']
     if name.lower() == title.lower() or name.lower() == jtitle.lower():
-      print(anime)
-      return anime['node']['id']
+      return anime['node']['id'], anime['list_status']['status'], anime['list_status']['num_episodes_watched']
 
 
 if __name__ == '__main__':
