@@ -9,8 +9,15 @@ function afterDOMLoaded() {
   if (document.URL.includes("ANIME BASE URL")) {
     // Uses URL to collect the current ep information on anime site
     var url = document.URL;
-    var ep = url.substring(url.indexOf('ep-'), url.length);
-    var epInfo = ep.split("-");
+    var ep;
+    var epInfo;
+    if (url.indexOf('?ep=') != -1) {
+      ep = url.substring(url.indexOf('?ep='), url.length);
+      epInfo = ep.split('=');
+    } else {
+      ep = url.substring(url.indexOf('/ep-'), url.length);
+      epInfo = ep.split('-');
+    }
 
     // Searches for the closest id then directly accessing its children for title info
     var section = document.getElementById('info');

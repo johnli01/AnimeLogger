@@ -29,21 +29,21 @@ def retrieveData():
 
 # Updates the anime on MAL to the most recently watched ep on anime website
 def updateMAL(title, jtitle, ep):
-  print(title + " | " + jtitle)
+  print("NAME: " + title + " | " + jtitle)
+  print("EP: ", ep)
   # Searches for the ID of the anime user is currently watching
   id, status, mal_ep = findAnimeID(title, jtitle)
   if id == None:
     print(title + " | " + jtitle + " : CANNOT BE FOUND IN USERS MAL LIST" )
   elif status == 'watching' and ep > mal_ep:
     update = {
-      'num_watched_episodes': ep,
-      'score': 3
+      'num_watched_episodes': ep
     }
     url = 'https://api.myanimelist.net/v2/anime/' + str(id) + '/my_list_status'
     r = requests.put(url, headers=key, data=update)
-    print("Finished Updating MAL")
+    print("FINISHED UPDATING MAL")
   else:
-    print("User is rewatching old ep")
+    print("USER IS REWATCHING PREV EP")
 
 
 # Searches the users current anime list on MAL and returns the specific anime id value,
