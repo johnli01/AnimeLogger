@@ -6,7 +6,7 @@ if (document.readyState === 'loading') {
 }
 
 function afterDOMLoaded() {
-  if (document.URL.includes("ANIME BASE URL")) {
+  if (document.URL.includes("ANIME URL")) {
     // Uses URL to collect the current ep information on anime site
     var url = document.URL;
     var ep;
@@ -24,9 +24,8 @@ function afterDOMLoaded() {
     var div = section.children[1];
     var title = div.children[1].textContent;
     var jtitle = div.children[1].getAttribute("data-jtitle");
-    alert(jtitle);
 
-    // Sends the collected information from anime site to background.js
+    // Sends the collected information from anime site to background. js
     chrome.runtime.sendMessage({"title": title, "jtitle": jtitle, "ep": epInfo[1]},
       function(response) {
         console.log(response);
