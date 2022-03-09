@@ -1,30 +1,41 @@
-from flask import Flask, request
+from flask import Flask, Blueprint, request
 from flask.globals import current_app
 import requests
 
 # MAL Access key (necessary to make changes and retrieve data on user's MAL list)
-key = {"Authorization": "Bearer "}
+key = {"Authorization": "Bearer"}
 
-app = Flask(__name__)
-
+MALUpdater = Blueprint("MALUpdater", __name__)
 
 # Retrieves the sent anime data from the Google Chrome Extension in a JSON type
-@app.route('/anime_data', methods=['GET', 'POST'])
+@MALUpdater.route('/anime_data', methods=['GET', 'POST'])
 def retrieveData():
-  with app.app_context():
-    if request.method == 'POST':
-      # Checks to see if the sent JSON data contains all the correct information
-      if not request.form['title'] or not request.form['jtitle'] or not request.form['ep']:
-        print('Enter all fields properly')
-      else:
-        # Saves JSON information into variables
-        title = request.form['title']
-        jtitle = request.form['jtitle']
-        ep = request.form['ep']
+    # if request.method == 'POST':
+    #   # Checks to see if the sent JSON data contains all the correct information
+    #   if not request.form['title'] or not request.form['jtitle'] or not request.form['ep']:
+    #     print('Enter all fields properly')
+    #   else:
+    #     # Saves JSON information into variables
+    #     title = request.form['title']
+    #     jtitle = request.form['jtitle']
+    #     ep = request.form['ep']
 
-        # Uses sent data from Chrome Extension to update user's anime entry on MAL
-        updateMAL(title, jtitle, int(ep))
-    return 'OK'
+    #     # Uses sent data from Chrome Extension to update user's anime entry on MAL
+    #     updateMAL(title, jtitle, int(ep))
+    # return 'OK'
+  if request.method == 'POST':
+    # Checks to see if the sent JSON data contains all the correct information
+    if not request.form['title'] or not request.form['jtitle'] or not request.form['ep']:
+      print('Enter all fields properly')
+    else:
+      # Saves JSON information into variables
+      title = request.form['title']
+      jtitle = request.form['jtitle']
+      ep = request.form['ep']
+
+      # Uses sent data from Chrome Extension to update user's anime entry on MAL
+      updateMAL(title, jtitle, int(ep))
+  return 'OK'
 
 
 # Updates the anime on MAL to the most recently watched ep on anime website
@@ -59,7 +70,7 @@ def findAnimeID(title, jtitle):
   if checkTitle(title, r) != None:
     return checkTitle(title, r)
   elif checkTitle(jtitle, r) != None:
-    return checkTitle(title, r)
+    return checkTitle(jtitle, r)
   else:
     return (None, None, None)
 
@@ -79,7 +90,7 @@ def checkTitle(title, r):
     name = anime['node']['title'].lower()
     matchedWords = 0
     for word in titleWords:
-      if word in name:
+      if word.lower() in name:
         matchedWords += 1
     score = matchedWords / len(titleWords)
     if score >= 0.5:
@@ -94,8 +105,3 @@ def getWatching(r):
     if anime['list_status']['status'] == 'watching':
       watching.append(anime)
   return watching
-
-
-
-if __name__ == '__main__':
-  app.run()

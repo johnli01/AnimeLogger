@@ -3,9 +3,6 @@ import requests
 import secrets
 
 
-CLIENT_ID = 'YOUR CLIENT ID'
-CLIENT_SECRET = 'YOUR CLIENT SECRET'
-
 
 # 1. Generate a new Code Verifier / Code Challenge.
 def get_new_code_verifier() -> str:
@@ -63,12 +60,38 @@ def print_user_info(access_token: str):
 
     print(f"\n>>> Greetings {user['name']}! <<<")
 
+# 5. Refresh API Token
+def refresh_token(refresh_code):
+    url = 'https://myanimelist.net/v1/oauth2/token'
+    data = {
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+        'grant_type': 'refresh_token',
+        'refresh_token': refresh_code
+    }
+
+    response = requests.post(url, data)
+    response.raise_for_status()  # Check whether the requests contains errors
+
+    token = response.json()
+    response.close()
+    print('Token generated successfully!')
+
+    with open('token.json', 'w') as file:
+        json.dump(token, file, indent = 4)
+        print('Token saved in "token.json"')
+
+    return token
 
 if __name__ == '__main__':
-    code_verifier = code_challenge = get_new_code_verifier()
-    print_new_authorisation_url(code_challenge)
+    # code_verifier = code_challenge = get_new_code_verifier()
+    # print_new_authorisation_url(code_challenge)
 
-    authorisation_code = input('Copy-paste the Authorisation Code: ').strip()
-    token = generate_new_token(authorisation_code, code_verifier)
+    # authorisation_code = input('Copy-paste the Authorisation Code: ').strip()
+    # token = generate_new_token(authorisation_code, code_verifier)
 
-    print_user_info(token['access_token'])
+    # print_user_info(token['access_token'])
+
+    refresh_code = input('Input Refresh Code: ')
+    refresh_token(refresh_code)
+    print("Update AnimeUpdater.py authorization key with new one in token.json")

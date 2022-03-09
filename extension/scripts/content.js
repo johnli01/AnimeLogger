@@ -6,7 +6,7 @@ if (document.readyState === 'loading') {
 }
 
 function afterDOMLoaded() {
-  if (document.URL.includes("ANIME URL")) {
+  if (document.URL.includes("ANIME SITE")) {
     // Uses URL to collect the current ep information on anime site
     var url = document.URL;
     var ep;
